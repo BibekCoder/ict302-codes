@@ -1,17 +1,14 @@
-const {Sequelize} = require ('sequelize'); //importing library that connects databases
-require('dotenv').config();//load .env file 
+// config/db.js
+const mysql = require("mysql2/promise");
 
-const sequelize = new Sequelize( 
-    //connects to database with the following info 
-    process.env.DB_NAME,
-    process.env.DB_USER,
-    process.env.DB_PASSWORD,
-    {
-        host:process.env.DB_HOST,
-        dialect: 'mysql',
-        logging: false,
-    }
-);
+const pool = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+});
 
-module.exports = sequelize;
-//make the connection shareable to other files in the same project
+module.exports = pool;
